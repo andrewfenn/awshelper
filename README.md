@@ -13,7 +13,7 @@ SDK directly.
 
 Add the following to your composer.json file and run ```composer update```.
 
-```
+```json
     "require": {
         "aws/aws-helper": "dev-master"
     },
@@ -25,7 +25,7 @@ Add the following to your composer.json file and run ```composer update```.
 
 Add the following config file to your config directory with the name ```aws.php```.
 
-```
+```php
 <?php
 
 return [
@@ -66,7 +66,7 @@ that will provide your server with access.
 For local development you can do a quick hack by changing the iam_url to
 a local url and serve it with some json like below.
 
-```
+```json
 {
   "Code" : "Success",
   "LastUpdated" : "2015-02-06T07:50:20Z",
@@ -93,7 +93,7 @@ contents of the file as a design choice, as some files may be too big
 to fit into PHP memory. Please also consider this when using this code
 so that you don't make mistakes in loading huge files into PHP.
 
-```
+```php
 <?php
 use AwsHelper\AwsHelper;
 use AwsHelper\S3Helper;
@@ -120,7 +120,7 @@ Included is a small SQS helper library that allows you to clearly setup
 pushing and recieving from a queue with little hassle.
 
 
-```
+```php
 // Change the URL of your SQS queue in the appropiate field
 $adapter = new SqsHelper(new AwsHelper, 'https://sqs.eu-west-1.amazonaws.com/****/queue-name-here');
 
@@ -144,7 +144,7 @@ echo "Done\n";
 
 The aforementioned code will generate the following output.
 
-```
+```shell
 hello
 Done
 ```
