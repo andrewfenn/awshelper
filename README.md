@@ -19,7 +19,7 @@ Add the following to your composer.json file and run ```composer update```.
     },
     "repositories": [{
         "type": "vcs",
-        "url":  "git@bitbucket.org:maqe/maqe-composer-aws-helper.git"
+        "url":  "https://github.com/andrewfenn/awshelper.git"
     }],
 ```
 
