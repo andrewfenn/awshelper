@@ -9,10 +9,10 @@ class SqsHelper
     protected $sqs;
     protected $queue_url;
 
-    public function __construct(AwsHelper $adapter, $queue_url)
+    public function __construct(AwsHelper $adapter, $queue_url, $region)
     {
         $this->setQueueUrl($queue_url);
-        $this->sqs = SqsClient::factory($adapter->getDefaultOptions());
+        $this->sqs = SqsClient::factory($adapter->getDefaultOptions() + ['region'=>$region]);
     }
 
     public function setQueueUrl($queue_url)

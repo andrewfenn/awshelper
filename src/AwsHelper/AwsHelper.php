@@ -35,7 +35,7 @@ class AwsHelper
         return $this->json;
     }
 
-    public function getDefaultOptions($aws_region=null, $aws_key=null, $aws_secret=null)
+    public function getDefaultOptions($aws_key=null, $aws_secret=null)
     {
         $opts = [
             'key'    => $aws_key,
@@ -61,9 +61,6 @@ class AwsHelper
                 'token'  => $json->Token,
             ];
         }
-
-        if (!empty($aws_region))
-            $opts['region'] = $aws_region;
 
         return $opts;
     }
