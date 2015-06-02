@@ -7,9 +7,16 @@ access key and password */
 
 class AwsHelper
 {
-    public function __construct()
+    public function __construct($iam_role, $iam_url='http://169.254.169.254/latest/meta-data/iam/security-credentials/')
     {
-        $json = $this->getAccessData();
+
+        if (empty($iam_role))
+            throw new \Exception('iam_role is empty');
+
+        if (empty($iam_url))
+            throw new \Exception('iam_url is empty');
+
+        $json = $this->getAccessData($iam_role, $iam_url);
 
         if ($json->Code !== 'Success')
             throw new \Exception('Unsuccessful in returning iam amazon credentials');
@@ -28,14 +35,14 @@ class AwsHelper
         return $this->json;
     }
 
-    public function getDefaultOptions()
+    public function getDefaultOptions($aws_region=null, $aws_key=null, $aws_secret=null)
     {
         $opts = [
-            'key'    => \Config::get('AWS.key', null),
-            'secret' => \Config::get('AWS.secret', null),
+            'key'    => $aws_key,
+            'secret' => $aws_secret,
         ];
 
-        if (!\Config::has('AWS.key') || !\Config::has('AWS.secret'))
+        if (empty($aws_key) || empty($aws_secret))
         {
             $json = $this->getJSON();
 
@@ -43,10 +50,10 @@ class AwsHelper
                 throw new \Exception('Unsuccessful in returning iam amazon credentials');
 
             if (empty($json->AccessKeyId))
-                throw new \Exception('AccessKeyId does not exist.');
+                throw new \Exception('AccessKeyId does not exist. This is possibly a problem with you aws setup.');
 
             if (empty($json->SecretAccessKey))
-                throw new \Exception('SecretAccessKey does not exist.');
+                throw new \Exception('SecretAccessKey does not exist. This is possibly a problem with you aws setup.');
 
             $opts = [
                 'key'    => $json->AccessKeyId,
@@ -55,13 +62,13 @@ class AwsHelper
             ];
         }
 
-        if (\Config::has('AWS.region'))
-            $opts['region'] = \Config::get('AWS.region');
+        if (!empty($aws_region))
+            $opts['region'] = $aws_region;
 
         return $opts;
     }
 
-    private function getAccessData()
+    private function getAccessData($iam_role, $iam_url)
     {
         /* grab the access and secret key from the iam role "aws-opsworks-ec2-role" */
         if (file_exists(storage_path().'/aws.json'))
@@ -73,14 +80,8 @@ class AwsHelper
             }
         }
 
-        if (empty(\Config::get('AWS.iam_role')))
-            throw new \Exception('No iam_role defined in configuration');
-
-        if (empty(\Config::get('AWS.iam_url')))
-            throw new \Exception('No iam_url defined in configuration');
-
         // get json from the amazon iam service.
-        $json = file_get_contents(\Config::get('AWS.iam_url').\Config::get('AWS.iam_role'));
+        $json = file_get_contents($iam_url.$iam_role);
         file_put_contents(storage_path().'/aws.json', $json);
 
         return json_decode($json);

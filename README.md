@@ -23,33 +23,12 @@ Add the following to your composer.json file and run ```composer update```.
     }],
 ```
 
-Add the following config file to your config directory with the name ```aws.php```.
+This library is set up to use amazon's roles for getting the username and
+password. If you don't want to do this then just put your key and secret into
+the appropiate configuration fields.
 
-```php
-<?php
-
-return [
-    /* Use the following options below to directly configure a
-    key and secret key. Only needed if you're coding outside
-    EC2 or you haven't set up your own API for getting the key
-    and secret from outside of amazon.
-
-    If you're not using this option comment it out. */
-    //'key'       => '',
-    //'secret'    => '',
-
-    'region'   => 'eu-west-1',
-    'iam_role' => '',
-    'iam_url'  => 'http://169.254.169.254/latest/meta-data/iam/security-credentials/',
-];
-```
-
-This library is set up to use amazon's roles for getting the username and password. If you
-don't want to do this then just put your key and secret into the appropiate configuration
-fields.
-
-If however you wish to use amazon's roles so that you're not storing the user or password
-to your services in the code base do the following.
+If however you wish to use amazon's roles so that you're not storing the user
+or password to your services in the code base, do the following.
 
 * Login to your amazon console
 * Go to Identity and Access Management
@@ -60,8 +39,8 @@ i.e. "Amazon S3 Full Access"
 * Add the role name you created to the "iam_role" configuration option
 
 Once you've done these steps the key, secret, and security tokens will be
-downloaded from the iam_url which is a url inside amazon's infrastructure
-that will provide your server with access.
+downloadable from the a url inside amazon's infrastructure that will provide
+your server with access.
 
 For local development you can do a quick hack by changing the iam_url to
 a local url and serve it with some json like below.
@@ -88,10 +67,10 @@ will attempt to grab a new key every time you run your code.
 
 To use the S3 helper library you'll do something similar as below.
 
-A quick note that $file_pointer returns a file pointer instead of the
-contents of the file as a design choice, as some files may be too big
-to fit into PHP memory. Please also consider this when using this code
-so that you don't make mistakes in loading huge files into PHP.
+A quick note that $file_pointer returns a file pointer instead of the contents
+of the file as a design choice, as some files may be too big to fit into PHP
+memory. Please also consider this when using this code so that you don't make
+mistakes in loading huge files into PHP.
 
 ```php
 <?php
@@ -99,7 +78,7 @@ use AwsHelper\AwsHelper;
 use AwsHelper\S3Helper;
 
 /* instantiate S3 Helper */
-$adapter = new S3Helper(new AwsHelper, 'bucket-name');
+$adapter = new S3Helper(new AwsHelper('iam-role'), 'bucket-name');
 
 /* Get a file from S3, store it temporarily on the system */
 $file_pointer = $adapter->getFile('some/place/in/the/bucket/foo.txt');
@@ -122,7 +101,7 @@ pushing and recieving from a queue with little hassle.
 
 ```php
 // Change the URL of your SQS queue in the appropiate field
-$adapter = new SqsHelper(new AwsHelper, 'https://sqs.eu-west-1.amazonaws.com/****/queue-name-here');
+$adapter = new SqsHelper(new AwsHelper('iam-role'), 'https://sqs.eu-west-1.amazonaws.com/****/queue-name-here');
 
 // Push a message to SQS
 $adapter->push('hello');
