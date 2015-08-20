@@ -12,7 +12,14 @@ class SqsHelper
     public function __construct(AwsHelper $adapter, $queue_url, $region)
     {
         $this->setQueueUrl($queue_url);
-        $this->sqs = SqsClient::factory($adapter->getDefaultOptions() + ['region'=>$region]);
+        $this->adapter = $adapter;
+        $this->region = $region;
+        $this->connect();
+    }
+
+    public function connect()
+    {
+        $this->sqs = SqsClient::factory($this->adapter->getDefaultOptions() + ['region'=>$this->region]);
     }
 
     public function setQueueUrl($queue_url)
@@ -31,8 +38,16 @@ class SqsHelper
     */
     public function listen($num_msg = 1)
     {
+        $expirationTime = $this->adapter->getJSON()->Expiration;
         $this->stop = false;
         while (!$this->stop) {
+
+            if ($this->adapter->hasAccessExpired($expirationTime))
+            {
+                $this->connect();
+                $expirationTime = $this->adapter->getJSON()->Expiration;
+            }
+
             $messages = $this->sqs->receiveMessage([
                 'QueueUrl'        => $this->queue_url,
 

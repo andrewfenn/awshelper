@@ -7,6 +7,9 @@ access key and password */
 
 class AwsHelper
 {
+    private $iam_role;
+    private $iam_url;
+
     public function __construct($iam_role, $iam_url='http://169.254.169.254/latest/meta-data/iam/security-credentials/')
     {
 
@@ -15,6 +18,9 @@ class AwsHelper
 
         if (empty($iam_url))
             throw new \Exception('iam_url is empty');
+
+        $this->iam_role = $iam_role;
+        $this->iam_url  = $iam_url;
 
         $json = $this->getAccessData($iam_role, $iam_url);
 
@@ -55,6 +61,16 @@ class AwsHelper
             if (empty($json->SecretAccessKey))
                 throw new \Exception('SecretAccessKey does not exist. This is possibly a problem with you aws setup.');
 
+            if (!empty($json->Token))
+            {
+                // check token expiration
+                if ($this->hasAccessExpired($json->Expiration))
+                {
+                    $this->json = $this->getAccessData($this->iam_role, $this->iam_url);
+                    return $this->getDefaultOptions();
+                }
+            }
+
             $opts = [
                 'key'    => $json->AccessKeyId,
                 'secret' => $json->SecretAccessKey,
@@ -84,7 +100,7 @@ class AwsHelper
         return json_decode($json);
     }
 
-    private function hasAccessExpired($date)
+    public function hasAccessExpired($date)
     {
         $date = new \DateTime($date);
         if ($date->format('U')-date('U') > 0)
