@@ -1,14 +1,14 @@
 {
     "name": "aws/aws-helper",
-    "homepage": "http://aws.amazon.com/sdkforphp2",
-    "description": "A collection of Laravel 4 helper scripts for using the PHP AWS SDK",
-    "keywords": ["laravel","laravel 4","aws","amazon","sdk","s3","ec2","dynamodb"],
+    "homepage": "https://github.com/andrewfenn/awshelper/",
+    "description": "A small helper library to make intergration of the AWS SDK easier",
+    "keywords": ["aws","amazon","sdk","s3","sqs"],
     "type":"library",
-    "license":"Apache-2.0",
+    "license":"MIT",
     "authors":[
         {
-            "name":"MAQE",
-            "homepage":"http://www.maqe.com"
+            "name":"Andrew Fenn",
+            "homepage":"https://github.com/andrewfenn"
         }
     ],
     "require": {
