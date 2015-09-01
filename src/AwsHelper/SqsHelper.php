@@ -7,6 +7,7 @@ class SqsHelper
 {
 
     protected $sqs;
+    protected $adapter;
     protected $queue_url;
     protected $region;
 
