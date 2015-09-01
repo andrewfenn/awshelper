@@ -1,9 +1,13 @@
 # AWS Helper
 
-This library is just a small library to quickly allow you to quickly
-get something up and running with the AWS PHP SDK. It's goal is to
-allow you to use all the basic things you need to get certain AWS
-services up and running with the least amount of hassle possible.
+This library is an extension of the AWS SDK to make it easier to intergrate
+AWS security token service where you refresh the access and secret token via
+the AWS API on the server itself.
+
+This is better than having a static access and secret key as it constantly
+changes and only your server on AWS can get access to this information. I
+have provided a small step by step list below on how to set this up on
+your AWS account.
 
 It's not meant to be an all inclusive library that can do everything,
 if you need more advanced use cases then please consider using the AWS
@@ -16,52 +20,57 @@ Add the following to your composer.json file and run ```composer update```.
 ```json
     "require": {
         "aws/aws-helper": "0.2.0"
-    },
-    "repositories": [{
-        "type": "vcs",
-        "url":  "https://github.com/andrewfenn/awshelper.git"
-    }],
+    }
 ```
 
-This library is set up to use amazon's roles for getting the username and
-password. If you don't want to do this then just put your key and secret into
-the appropiate configuration fields.
+This library is set up to use amazon's roles for getting the access and
+secret key. If you don't want to do this then, for example you're developing
+on your own system outside of AWS then see below.
 
-If however you wish to use amazon's roles so that you're not storing the user
-or password to your services in the code base, do the following.
+### How to setup your AWS account
+
+If you wish to use amazon's roles so that you're not storing the access
+or secret key to your services in the code base, do the following.
 
 * Login to your amazon console
 * Go to Identity and Access Management
 * Click the Roles link
 * Create a new role, open it up and click on "attach role policy"
 * Select from the policy template for the service you wish to use
-i.e. "Amazon S3 Full Access"
+i.e. "Amazon S3 Full Access", "Amazon SQS Full Access"
 * Add the role name you created to the "iam_role" configuration option
 
 Once you've done these steps the key, secret, and security tokens will be
 downloadable from the a url inside amazon's infrastructure that will provide
 your server with access.
 
-For local development you can do a quick hack by changing the iam_url to
-a local url and serve it with some json like below.
+### How to setup for development outside of amazon
+
+For local development make a file like below called development.json
 
 ```json
 {
   "Code" : "Success",
   "LastUpdated" : "2015-02-06T07:50:20Z",
-  "Type" : "<ENTER A NAME HERE>",
   "AccessKeyId" : "<PUT YOUR ACCESS KEY HERE>",
   "SecretAccessKey" : "<PUT YOUR SECRET KEY HERE>",
   "Token" : "",
-  "Expiration" : "2015-02-19T04:45:53+00:00"
+  "Expiration" : "2030-02-19T04:45:53+00:00"
 }
 
 ```
 
-Change the Type, AccessKeyId, and SecretAccessKey fields to your appropiate
+Change the AccessKeyId, and SecretAccessKey fields to your appropiate
 settings. Make sure the Expiration date is a date in the future or the code
 will attempt to grab a new key every time you run your code.
 
+```php
+$awsHelper = new AwsHelper('development', 'http://url-to-root-folder-with-file/');
+```
+
+*I recommend you do not commit the development.json file*. This file should sit
+somewhere secure that only your development team can access as it contains your
+AWS Access and Secret key details.
 
 ### Quick use of the S3 Helper
 
