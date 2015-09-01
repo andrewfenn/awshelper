@@ -1,5 +1,5 @@
 {
-    "name": "aws/aws-helper",
+    "name": "andrewfenn/aws-helper",
     "homepage": "https://github.com/andrewfenn/awshelper/",
     "description": "A small helper library to make intergration of the AWS SDK easier",
     "keywords": ["aws","amazon","sdk","s3","sqs"],
