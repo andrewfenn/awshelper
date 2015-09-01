@@ -107,6 +107,9 @@ to somewhere else on the system. */
 Included is a small SQS helper library that allows you to clearly setup
 pushing and recieving from a queue with little hassle.
 
+This helper will refresh the security token if the expiration date has
+passed so if you have a long running process the code continues to run
+without throwing an expiration exception.
 
 ```php
 // Change the URL of your SQS queue in the appropiate field
