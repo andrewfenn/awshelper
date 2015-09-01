@@ -15,7 +15,7 @@ Add the following to your composer.json file and run ```composer update```.
 
 ```json
     "require": {
-        "aws/aws-helper": "dev-master"
+        "aws/aws-helper": "0.2.0"
     },
     "repositories": [{
         "type": "vcs",
