@@ -65,7 +65,7 @@ settings. Make sure the Expiration date is a date in the future or the code
 will attempt to grab a new key every time you run your code.
 
 ```php
-$awsHelper = new AwsHelper('development', 'http://url-to-root-folder-with-file/');
+$awsHelper = new AwsHelper('development.json', 'http://url-to-root-folder-with-file/');
 ```
 
 *I recommend you do not commit the development.json file*. This file should sit
