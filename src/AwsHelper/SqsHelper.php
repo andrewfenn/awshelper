@@ -8,6 +8,7 @@ class SqsHelper
 
     protected $sqs;
     protected $queue_url;
+    protected $region;
 
     public function __construct(AwsHelper $adapter, $queue_url, $region)
     {
@@ -19,7 +20,7 @@ class SqsHelper
 
     public function connect()
     {
-        $this->sqs = SqsClient::factory($this->adapter->getDefaultOptions() + ['region'=>$this->region]);
+        $this->sqs = SqsClient::factory($this->adapter->getDefaultOptions() + ['region' => $this->region]);
     }
 
     public function setQueueUrl($queue_url)

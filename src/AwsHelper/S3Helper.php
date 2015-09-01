@@ -5,10 +5,20 @@ use Aws\S3\Exception\S3Exception;
 
 class S3Helper
 {
-    public function __construct(AwsHelper $adapter, $bucket_name, $options = [])
+    protected $s3;
+    protected $bucket_name;
+    protected $region;
+
+    public function __construct(AwsHelper $adapter, $bucket_name, $region)
     {
         $this->bucket_name = $bucket_name;
-        $this->s3 = S3Client::factory(array_merge($adapter->getDefaultOptions(), $options));
+        $this->region = $region;
+        $this->connect();
+    }
+
+    public function connect()
+    {
+        $this->s3 = S3Client::factory($adapter->getDefaultOptions() + ['region' => $this->region]);
     }
 
     /*
