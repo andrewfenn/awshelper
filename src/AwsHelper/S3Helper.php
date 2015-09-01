@@ -23,6 +23,18 @@ class S3Helper
         $this->s3 = S3Client::factory($this->adapter->getDefaultOptions() + ['region' => $this->region]);
     }
 
+    /* When accessing the S3Client you should call this function everytime
+    so that you can be sure that the token isn't going to expire on you in the
+    middle of a call */
+    public function getClient()
+    {
+        $expirationTime = $this->adapter->getJSON()->Expiration;
+        if ($this->adapter->hasAccessExpired($expirationTime)) {
+            $this->connect();
+        }
+        return $this->s3;
+    }
+
     /*
     @param $file_location   The location of the file on your local system
     @param $s3_location     The location of the file you want to upload to s3
@@ -35,6 +47,9 @@ class S3Helper
     {
         if ($this->s3 == null)
             return false;
+
+        $this->getClient();
+
         try {
             $result = $this->s3->putObject([
                 'Bucket'     => $this->bucket_name,
@@ -61,6 +76,8 @@ class S3Helper
         if ($this->s3 == null)
             return false;
 
+        $this->getClient();
+
         try {
             $result = $this->s3->putObject([
                 'Bucket'     => $this->bucket_name,
@@ -83,6 +100,8 @@ class S3Helper
     {
         if ($this->s3 == null)
             return false;
+
+        $this->getClient();
 
         try {
             $result = $this->s3->getObject([
