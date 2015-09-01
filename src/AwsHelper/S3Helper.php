@@ -5,10 +5,10 @@ use Aws\S3\Exception\S3Exception;
 
 class S3Helper
 {
-    public function __construct(AwsHelper $adapter, $bucket_name)
+    public function __construct(AwsHelper $adapter, $bucket_name, $options = [])
     {
         $this->bucket_name = $bucket_name;
-        $this->s3 = S3Client::factory($adapter->getDefaultOptions());
+        $this->s3 = S3Client::factory(array_merge($adapter->getDefaultOptions(), $options));
     }
 
     /*
@@ -19,7 +19,7 @@ class S3Helper
         bucket-owner-full-control
     @param $metadata        Metadata you want to store with the file.
     */
-    public function saveFile($file_location, $s3_location, $acl = 'private', $metadata=[])
+    public function saveFile($file_location, $s3_location, $acl = 'private', $metadata = [])
     {
         if ($this->s3 == null)
             return false;
@@ -44,7 +44,7 @@ class S3Helper
         bucket-owner-full-control
     @param $metadata        Metadata you want to store with the file.
     */
-    public function saveFileContent($file_content, $s3_location, $acl = 'private', $metadata=[])
+    public function saveFileContent($file_content, $s3_location, $acl = 'private', $metadata = [])
     {
         if ($this->s3 == null)
             return false;
