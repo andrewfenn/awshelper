@@ -41,9 +41,9 @@ class S3Helper
     @param $acl             What access the file should have, options are: private,
         public-read, public-read-write, authenticated-read, bucket-owner-read,
         bucket-owner-full-control
-    @param $metadata        Metadata you want to store with the file.
+    @param $params          Additional parameters you want to pass to S3 client.
     */
-    public function saveFile($file_location, $s3_location, $acl = 'private', $metadata = [])
+    public function saveFile($file_location, $s3_location, $acl = 'private', $params = [])
     {
         if ($this->s3 == null)
             return false;
@@ -56,8 +56,7 @@ class S3Helper
                 'Key'        => $s3_location,
                 'SourceFile' => $file_location,
                 'ACL'        => $acl,
-                'Metadata'   => $metadata,
-            ]);
+            ] + $params);
         } catch (\Exception $e) {
             return false;
         }
@@ -69,9 +68,9 @@ class S3Helper
     @param $acl             What access the file should have, options are: private,
         public-read, public-read-write, authenticated-read, bucket-owner-read,
         bucket-owner-full-control
-    @param $metadata        Metadata you want to store with the file.
+    @param $params          Additional parameters you want to pass to S3 client.
     */
-    public function saveFileContent($file_content, $s3_location, $acl = 'private', $metadata = [])
+    public function saveFileContent($file_content, $s3_location, $acl = 'private', $params = [])
     {
         if ($this->s3 == null)
             return false;
@@ -84,8 +83,7 @@ class S3Helper
                 'Key'        => $s3_location,
                 'Body'       => $file_content,
                 'ACL'        => $acl,
-                'Metadata'   => $metadata,
-            ]);
+            ] + $params);
         } catch (\Exception $e) {
             return false;
         }
