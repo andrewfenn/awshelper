@@ -1,5 +1,12 @@
 # AWS Helper
 
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Quality Score](https://img.shields.io/scrutinizer/g/andrewfenn/awshelper.svg?style=flat-square)](https://scrutinizer-ci.com/g/andrewfenn/awshelper)
+
+[![Total Downloads](https://img.shields.io/packagist/dd/andrewfenn/aws-helper.svg?style=flat-square)](https://packagist.org/packages/andrewfenn/aws-helper)
+[![Total Downloads](https://img.shields.io/packagist/dm/andrewfenn/aws-helper.svg?style=flat-square)](https://packagist.org/packages/andrewfenn/aws-helper)
+[![Total Downloads](https://img.shields.io/packagist/dt/andrewfenn/aws-helper.svg?style=flat-square)](https://packagist.org/packages/andrewfenn/aws-helper)
+
 This library is an extension of the AWS SDK to make it easier to intergrate
 AWS security token service where you refresh the access and secret token via
 the AWS API on the server itself.
